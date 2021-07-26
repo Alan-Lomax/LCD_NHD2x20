@@ -1,30 +1,30 @@
-# LCD_NHD2x20
- LCD Display Class
+#ifndef MY_NHD2x20
+#define MY_NHD2x20
+#include <Wire.h>           //I2C library
+#include <Arduino.h>
 
-  This class implements the 2x20 Monochrome LCD display from Newhaven Devices.
-  It does so in I2C mode using the wire library. The default I2C address for this device is 0x28 but this can be    
-  changed with one of the methods provided. Other than absolute minimal delays to ensure I2C comms no long delays are used.
+/*
+ ***************************************************** 
+ ** NHD2x20 Usage                                   **  
+ **                                                 **  
+ ** This class implements the 2x20 Monochrome LCD   **  
+ ** display from Newhaven Devices.It does so in I2C **  
+ ** mode using the wire library. The default I2C    **  
+ ** addrss for this device is 0x28 but this can be  **  
+ ** changed with one of the methods provided.       **  
+ ** Other than minimal delays to ensure I2C comms   **  
+ ** no long delays are used.                        **  
+ *****************************************************
+*/
+class LCD_NHD2x20 { 
+  
+private:
+      byte LCDa = 0x28;                          // LCD address on I2C bus
+ String _toSend = "";                            // Text we will send
+    char _buffer[0x20];                          // The send buffer  
 
-### Files: LCD_NHD2x20.h, LCD_NHD2x20.CPP
-
-### Usage:
-Include the header file near the top of your code. (After this is done the compiler will know how to handle you using it.)
-
-    #include "LCD_NHD2x20.h";
-
-Notice there are a large number of methods available for this display. 
-These are effectively wrappers for all of the commands the display can process (according to the datasheet).
-I have only added L1C1() and L2C1() to move the cursor to line 1 column 1, and line 2 column 1 respectively.
-
-Create a new member of this class is simple as no parameters or additional setup is needed.
-(Assuming the default Arduino I2C pins are used and the display is still on its default I2C address)
-
+public:
          LCD_NHD2x20();
-
-### Instantiation:
-     LCD_NHD2x20 myLCD();	           // create new member called myLCD
-
-### Methods
     void LCD_On();                                // 0x41 Turn Display On
     void LCD_Off();                               // 0x42 Turn Display Off
     void LCD_SetCursor(byte _posn);               // 0x45  Set Cursor to _posn  (Line 1 = 0x00 to 0x13  Line 2 = 0x40 to 0x53)
@@ -52,6 +52,5 @@ Create a new member of this class is simple as no parameters or additional setup
     void LCD_I2CAddress();                        // 0x72  Display I2C Address
     void LCD_L1C1();                              // 0x45 0x40 Set Cursor to Line #1, Col #1
     void LCD_L2C1();                              // 0x45 0x40 Set Cursor to Line #2, Col #1
-
-### Properties:
-(none - the display itself can show some information such as firmware version if the appropriate method is called.)
+};
+#endif
