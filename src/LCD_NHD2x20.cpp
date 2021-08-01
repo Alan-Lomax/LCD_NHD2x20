@@ -3,30 +3,30 @@
    ## NHD Extended LCD Screen        ##
    ## 2X20 LCD Display               ##
    ####################################
-   Different commands have different delay requirements per spec sheet.
 */
 
-LCD_NHD2x20::LCD_NHD2x20() {                                  // Constructor
+LCD_NHD2x20::NHD2x20() {                                  // Constructor
 /* Note re I2C Frequency
 
-   TWBR is part of a frequency prescaler formula.
-   It is defined by the formula
-   I2C freq = CPU Clock / ( 16+(2*TWBR*Prescaler)
-   Default Prescaler =1 and CPU Clock is typically 16Mhz.
+   TWBR is part of a frequency prescaler formula and is defined by the formula
+        I2C freq = CPU Clock / ( 16+(2*TWBR*Prescaler)
+   The default Prescaler = 1 and the CPU Clock is typically 16Mhz therefore: 
+      For a TWBR = 12, Prescaler =1, I2C freq = 400 kHz
+      For a TWBR = 32, Prescaler =1, I2C freq = 200 kHz
+      For a TWBR = 72, Prescaler =1, I2C freq = 100 kHz
+      For a TWBR = 152, Prescaler =1, I2C freq = 50 kHz
 
-   For a TWBR = 12, Prescaler =1, I2C freq = 400 kHz
-   For a TWBR = 32, Prescaler =1, I2C freq = 200 kHz
-   For a TWBR = 72, Prescaler =1, I2C freq = 100 kHz
-   For a TWBR = 152, Prescaler =1, I2C freq = 50 kHz
-
-   For my display the speed = 100Khz max (faster results in garbage).
+   For my display the speed = 100Khz max (any faster clock results in garbage).
    According to Spec Sheet max speed is 50khz so leave well enough alone.
-  
+   Because I2C and the LCD is relatively slow vs the Arduino a very small delay is needed after
+   an I2C command is sent to allow the serial buffer to be emptied and processed by the display.
+   Not having this delay results in corrupted messages. Different commands do have different
+   delay requirements per spec sheet. (most often only 1ms)
   */
-	TWBR = 72;                                               // Clock prescaler
+	TWBR = 72;                                            // Clock prescaler
 }
 
-void LCD_NHD2x20::LCD_On() {                                  // 0x41 Turn Display On
+void LCD_NHD2x20::On() {                                  // 0x41 Turn Display On
   Wire.beginTransmission(LCDa);
   Wire.write (0xFE);
   Wire.write(0x41);
@@ -34,7 +34,7 @@ void LCD_NHD2x20::LCD_On() {                                  // 0x41 Turn Displ
   delay(1);
 }
 
-void LCD_NHD2x20::LCD_Off() {                                 // 0x42 Turn Display Off
+void LCD_NHD2x20::Off() {                                 // 0x42 Turn Display Off
   Wire.beginTransmission(LCDa);
   Wire.write (0xFE);
   Wire.write(0x42);
@@ -42,7 +42,7 @@ void LCD_NHD2x20::LCD_Off() {                                 // 0x42 Turn Displ
   delay(1);
 }
 
-void LCD_NHD2x20::LCD_SetCursor(byte _posn) {                 // 0x45  Set Cursor to _posn  (Line 1 = 0x00 to 0x13  Line 2 = 0x40 to 0x53)
+void LCD_NHD2x20::SetCursor(byte _posn) {                 // 0x45  Set Cursor to _posn  (Line 1 = 0x00 to 0x13  Line 2 = 0x40 to 0x53)
   Wire.beginTransmission(LCDa);
   Wire.write (0xFE);
   Wire.write(0x45);
@@ -51,7 +51,7 @@ void LCD_NHD2x20::LCD_SetCursor(byte _posn) {                 // 0x45  Set Curso
   delay(1);
 }
 
-void LCD_NHD2x20::LCD_Home() {                                // 0x46 Cursor to home position
+void LCD_NHD2x20::Home() {                                // 0x46 Cursor to home position
   Wire.beginTransmission(LCDa);
   Wire.write (0xFE);
   Wire.write(0x46);
@@ -59,7 +59,7 @@ void LCD_NHD2x20::LCD_Home() {                                // 0x46 Cursor to 
   delay(2);
 }
 
-void LCD_NHD2x20::LCD_UnderlineOn() {                         // 0x47 Turn on underline cursor
+void LCD_NHD2x20::UnderlineOn() {                         // 0x47 Turn on underline cursor
   Wire.beginTransmission(LCDa);
   Wire.write (0xFE);
   Wire.write(0x47);
@@ -67,7 +67,7 @@ void LCD_NHD2x20::LCD_UnderlineOn() {                         // 0x47 Turn on un
   delay(2);
 }
 
-void LCD_NHD2x20::LCD_UnderlineOff() {                 // 0x48 Turn off underline cursor
+void LCD_NHD2x20::UnderlineOff() {                 // 0x48 Turn off underline cursor
   Wire.beginTransmission(LCDa);
   Wire.write (0xFE);
   Wire.write(0x48);
@@ -75,7 +75,7 @@ void LCD_NHD2x20::LCD_UnderlineOff() {                 // 0x48 Turn off underlin
   delay(2);
 }
 
-void LCD_NHD2x20::LCD_CursorLeft() {                   // 0x49 Move Cursor Left one place
+void LCD_NHD2x20::CursorLeft() {                   // 0x49 Move Cursor Left one place
   Wire.beginTransmission(LCDa);
   Wire.write (0xFE);
   Wire.write(0x49);
@@ -83,7 +83,7 @@ void LCD_NHD2x20::LCD_CursorLeft() {                   // 0x49 Move Cursor Left 
   delay(1);
 }
 
-void LCD_NHD2x20::LCD_CursorRight() {                  // 0x4A Move Cursor Right one place
+void LCD_NHD2x20::CursorRight() {                  // 0x4A Move Cursor Right one place
   Wire.beginTransmission(LCDa);
   Wire.write (0xFE);
   Wire.write(0x4A);
@@ -91,7 +91,7 @@ void LCD_NHD2x20::LCD_CursorRight() {                  // 0x4A Move Cursor Right
   delay(1);
 }
 
-void LCD_NHD2x20::LCD_BlinkOn() {                      // 0x4B Turn on Blink cursor
+void LCD_NHD2x20::BlinkOn() {                      // 0x4B Turn on Blink cursor
   Wire.beginTransmission(LCDa);
   Wire.write (0xFE);
   Wire.write(0x4B);
@@ -99,7 +99,7 @@ void LCD_NHD2x20::LCD_BlinkOn() {                      // 0x4B Turn on Blink cur
   delay(1);
 }
 
-void LCD_NHD2x20::LCD_BlinkOff() {                     // 0x4C Turn off Blink cursor
+void LCD_NHD2x20::BlinkOff() {                     // 0x4C Turn off Blink cursor
   Wire.beginTransmission(LCDa);
   Wire.write (0xFE);
   Wire.write(0x4C);
@@ -107,7 +107,7 @@ void LCD_NHD2x20::LCD_BlinkOff() {                     // 0x4C Turn off Blink cu
   delay(1);
 }
 
-void LCD_NHD2x20::LCD_Backspace() {                    // 0x4E Backspace
+void LCD_NHD2x20::Backspace() {                    // 0x4E Backspace
   Wire.beginTransmission(LCDa);
   Wire.write (0xFE);
   Wire.write(0x4E);
@@ -115,7 +115,7 @@ void LCD_NHD2x20::LCD_Backspace() {                    // 0x4E Backspace
   delay(1);
 }
 
-void LCD_NHD2x20::LCD_Clear() {                        // 0x51 Clear LCD Screen
+void LCD_NHD2x20::Clear() {                        // 0x51 Clear LCD Screen
   Wire.beginTransmission(LCDa);
   Wire.write (0xFE);
   Wire.write(0x51);
@@ -123,7 +123,7 @@ void LCD_NHD2x20::LCD_Clear() {                        // 0x51 Clear LCD Screen
   delay(2);
 }
 
-void LCD_NHD2x20::LCD_SetContrast(byte _contrast) {    // 0x52  Set Contrast to _contrast
+void LCD_NHD2x20::SetContrast(byte _contrast) {    // 0x52  Set Contrast to _contrast
   Wire.beginTransmission(LCDa);
   Wire.write (0xFE);
   Wire.write(0x52);
@@ -132,7 +132,7 @@ void LCD_NHD2x20::LCD_SetContrast(byte _contrast) {    // 0x52  Set Contrast to 
   delay(1);
 }
 
-void LCD_NHD2x20::LCD_SetBacklight(byte _backlight) {   // 0x53  Set Backlight to _backlight
+void LCD_NHD2x20::SetBacklight(byte _backlight) {   // 0x53  Set Backlight to _backlight
   Wire.beginTransmission(LCDa);
   Wire.write (0xFE);
   Wire.write(0x53);
@@ -141,14 +141,14 @@ void LCD_NHD2x20::LCD_SetBacklight(byte _backlight) {   // 0x53  Set Backlight t
   delay(1);
 }
 
-void LCD_NHD2x20::LCD_Print(char _buffer[]) {  // Display Text on LCD
+void LCD_NHD2x20::Print(char _buffer[]) {  // Display Text on LCD
   Wire.beginTransmission(LCDa);
   Wire.write(_buffer);
   Wire.endTransmission();
   delay(1);
 }
 
-void LCD_NHD2x20::LCD_Print(char _buffer[], byte _row, byte _col) { 
+void LCD_NHD2x20::Print(char _buffer[], byte _row, byte _col) { 
   
   // Display buffered Text on LCD at row (1 or 2), col (1-20) 
   int _posn = 0;                              // A new variable each time through
@@ -175,7 +175,7 @@ void LCD_NHD2x20::LCD_Print(char _buffer[], byte _row, byte _col) {
 }
 	
 
-void LCD_NHD2x20::LCD_LoadCustomChar( byte _a, char _c[8]) {  // 0x54 Load a Custom Character
+void LCD_NHD2x20::LoadCustomChar( byte _a, char _c[8]) {  // 0x54 Load a Custom Character
   Wire.beginTransmission(LCDa);
   Wire.write(0xFE);
   Wire.write(0x54);
@@ -193,7 +193,7 @@ void LCD_NHD2x20::LCD_LoadCustomChar( byte _a, char _c[8]) {  // 0x54 Load a Cus
 }
 //  In order to display the custom character, user would first need to call ‘Set Cursor Position’ command, then followed by the address of the custom character (0 to 8).
 
-void LCD_NHD2x20::LCD_PrintCustom(byte _p, byte _a) {   // 0x45  Set Cursor to _posn  (Line 1 = 0x00 to 0x13  Line 2 = 0x40 to 0x53) and displays custom character _addr
+void LCD_NHD2x20::PrintCustom(byte _p, byte _a) {   // 0x45  Set Cursor to _posn  (Line 1 = 0x00 to 0x13  Line 2 = 0x40 to 0x53) and displays custom character _addr
   Wire.beginTransmission(LCDa);
   Wire.write (0xFE);
   Wire.write(0x45);
@@ -203,8 +203,7 @@ void LCD_NHD2x20::LCD_PrintCustom(byte _p, byte _a) {   // 0x45  Set Cursor to _
   delay(1);
 }
 
-
-void LCD_NHD2x20::LCD_MoveLeft() {                      // 0x55 Move Display Left
+void LCD_NHD2x20::MoveLeft() {                      // 0x55 Move Display Left
   Wire.beginTransmission(LCDa);
   Wire.write (0xFE);
   Wire.write(0x55);
@@ -212,7 +211,7 @@ void LCD_NHD2x20::LCD_MoveLeft() {                      // 0x55 Move Display Lef
   delay(1);
 }
 
-void LCD_NHD2x20::LCD_MoveRight() {                     // 0x56 Move Display Right
+void LCD_NHD2x20::MoveRight() {                     // 0x56 Move Display Right
   Wire.beginTransmission(LCDa);
   Wire.write (0xFE);
   Wire.write(0x56);
@@ -220,7 +219,7 @@ void LCD_NHD2x20::LCD_MoveRight() {                     // 0x56 Move Display Rig
   delay(1);
 }
 
-void LCD_NHD2x20::LCD_SetI2CAddress(byte _newI2Ca) {    // 0x62  Change the I2C Address
+void LCD_NHD2x20::SetI2CAddress(byte _newI2Ca) {    // 0x62  Change the I2C Address
   Wire.beginTransmission(LCDa);            //       range is 0x00 to 0xFE and it must be an even number
   Wire.write (0xFE);
   Wire.write(0x62);
@@ -230,7 +229,7 @@ void LCD_NHD2x20::LCD_SetI2CAddress(byte _newI2Ca) {    // 0x62  Change the I2C 
   delay(3);
 }
 
-void LCD_NHD2x20::LCD_Firmware() {                      // 0x70  Display Firmware Version
+void LCD_NHD2x20::Firmware() {                      // 0x70  Display Firmware Version
   Wire.beginTransmission(LCDa);
   Wire.write (0xFE);
   Wire.write(0x70);
@@ -238,7 +237,7 @@ void LCD_NHD2x20::LCD_Firmware() {                      // 0x70  Display Firmwar
   delay(5);
 }
 
-void LCD_NHD2x20::LCD_I2CAddress() {                     // 0x72  Display I2C Address
+void LCD_NHD2x20::I2CAddress() {                     // 0x72  Display I2C Address
   Wire.beginTransmission(LCDa);
   Wire.write (0xFE);
   Wire.write(0x72);
@@ -246,7 +245,7 @@ void LCD_NHD2x20::LCD_I2CAddress() {                     // 0x72  Display I2C Ad
   delay(5);
 }
 
-void LCD_NHD2x20::LCD_L1C1() {                           // 0x45 0x40 Set Cursor to Line #1, Col #1
+void LCD_NHD2x20::L1C1() {                           // 0x45 0x40 Set Cursor to Line #1, Col #1
   Wire.beginTransmission(LCDa);
   Wire.write (0xFE);
   Wire.write(0x45);
@@ -255,7 +254,7 @@ void LCD_NHD2x20::LCD_L1C1() {                           // 0x45 0x40 Set Cursor
   delay(1);
 }
 
-void LCD_NHD2x20::LCD_L2C1() {                            // 0x45 0x40 Set Cursor to Line #2, Col #1
+void LCD_NHD2x20::L2C1() {                            // 0x45 0x40 Set Cursor to Line #2, Col #1
   Wire.beginTransmission(LCDa);
   Wire.write (0xFE);
   Wire.write(0x45);
