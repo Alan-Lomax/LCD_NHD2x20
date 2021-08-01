@@ -1,9 +1,7 @@
 # LCD_NHD2x20
  LCD Display Class
 
-  This class implements the 2x20 Monochrome LCD display from Newhaven Devices.
-  It does so in I2C mode using the wire library. The default I2C address for this device is 0x28 but this can be    
-  changed with one of the methods provided. Other than absolute minimal delays to ensure I2C comms (typ 1ms) no other delays are used.
+This class implements the 2x20 Monochrome LCD display from Newhaven Devices. It does so in I2C mode using the wire library. The default I2C address for this device is 0x28 but this can be changed with one of the methods provided. Other than absolute minimal delays to ensure I2C comms (typ 1ms) no other delays are used.
 
 ### Files: LCD_NHD2x20.h, LCD_NHD2x20.CPP
 
