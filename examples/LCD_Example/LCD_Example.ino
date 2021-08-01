@@ -1,7 +1,7 @@
 #include "LCD_NHD2x20.h"    //LCD library
 /*
  * A test sketch demonstrating many features of the 2 row by 20 character LCD display.
- * This display has two long rows of character memory, with only the first 20 displayed.
+ * This display has two long rows of character memory, with only the first 20 of each row displayed.
  *    positions 0x00-0x13 (decimal 00 -19) are visible on line 1
  *    positions 0x40-0x53 (decimal 64 -83) are visible on line 2
  * One of the benefits of this library is doing the math so that a 'row, collumn' approach
