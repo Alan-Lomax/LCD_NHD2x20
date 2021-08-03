@@ -5,7 +5,7 @@
    ####################################
 */
 
-LCD_NHD2x20::NHD2x20() {                                  // Constructor
+LCD_NHD2x20::LCD_NHD2x20() {                               // Constructor
 /* Note re I2C Frequency
 
    TWBR is part of a frequency prescaler formula and is defined by the formula
@@ -23,7 +23,7 @@ LCD_NHD2x20::NHD2x20() {                                  // Constructor
    Not having this delay results in corrupted messages. Different commands do have different
    delay requirements per spec sheet. (most often only 1ms)
   */
-	TWBR = 72;                                            // Clock prescaler
+   TWBR = 72;                                            // Clock prescaler
 }
 
 void LCD_NHD2x20::On() {                                  // 0x41 Turn Display On
@@ -156,10 +156,10 @@ void LCD_NHD2x20::Print(char _buffer[], byte _row, byte _col) {
   _col -= 1;                                  // Deduct 1 from col - now zero based
   
   if (_row == 0) {
-	  _posn = 0x00;                           // row 1 so _posn does not need an offset
+      _posn = 0x00;                           // row 1 so _posn does not need an offset
   }
   else if (_row == 1) {
-	  _posn = 0x40;                           // row 2 so _posn begins at offset 0x40
+      _posn = 0x40;                           // row 2 so _posn begins at offset 0x40
   }
   _posn += _col;                              // add the number of columns to determine actual position.
 
@@ -173,7 +173,6 @@ void LCD_NHD2x20::Print(char _buffer[], byte _row, byte _col) {
   Wire.endTransmission();
   delay(1);
 }
-	
 
 void LCD_NHD2x20::LoadCustomChar( byte _a, char _c[8]) {  // 0x54 Load a Custom Character
   Wire.beginTransmission(LCDa);

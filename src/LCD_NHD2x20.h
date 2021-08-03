@@ -1,11 +1,10 @@
-#ifndef MY_NHD2x20
-#define MY_NHD2x20
+#ifndef MY_LCD_NHD2x20
+#define MY_LCD_NHD2x20
 #include <Wire.h>           //I2C library
 #include <Arduino.h>
-
 /*
  ***************************************************** 
- ** NHD2x20 Usage                                   **  
+ ** LCD_NHD2x20 Usage                               **  
  **                                                 **  
  ** This class implements the 2x20 Monochrome LCD   **  
  ** display from Newhaven Devices.It does so in I2C **  
@@ -17,14 +16,13 @@
  *****************************************************
 */
 class LCD_NHD2x20 { 
-  
 private:
-      byte LCDa = 0x28;                          // LCD address on I2C bus
- String _toSend = "";                            // Text we will send
+     byte LCDa = 0x28;                           // LCD address on I2C bus
+  String _toSend = "";                           // Text we will send
     char _buffer[0x20];                          // The send buffer  
 
 public:
-    void NHD2x20();                           // constructor
+    LCD_NHD2x20();                            // constructor
     void On();                                // 0x41 Turn Display On
     void Off();                               // 0x42 Turn Display Off
     void SetCursor(byte _posn);               // 0x45  Set Cursor to _posn  (Line 1 = 0x00 to 0x13  Line 2 = 0x40 to 0x53)
