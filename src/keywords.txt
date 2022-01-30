@@ -1,0 +1,52 @@
+#######################################
+# Syntax Coloring Map for LCD_NHD2x20
+#######################################
+# KEYWORD1 is generally used for the classes that you define in your library.
+# KEYWORD2 is used for the public member functions of the class. Basically these are the class' methods.
+# LITERAL1 is used for any #defines that are relevant for the user of the library.
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+LCD_NHD2x20		KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+# Common to many
+update		KEYWORD2
+state		KEYWORD2
+on			KEYWORD2
+off			KEYWORD2
+DEBUG		LITERAL1
+__FILE__	LITERAL1
+
+# LCD_NHD2x20 Specific
+On			KEYWORD2
+Off			KEYWORD2
+SetCursor	KEYWORD2
+Home		KEYWORD2
+UnderlineOn		KEYWORD2
+UnderlineOff	KEYWORD2
+CursorLeft	KEYWORD2
+CursorRight		KEYWORD2
+BlinkOn		KEYWORD2
+BlinkOff	KEYWORD2
+Backspace	KEYWORD2
+Clear		KEYWORD2
+SetContrast		KEYWORD2
+SetBacklight	KEYWORD2
+Print		KEYWORD2
+LoadCustomChar	KEYWORD2
+PrintCustom		KEYWORD2
+MoveLeft	KEYWORD2
+MoveRight	KEYWORD2
+Firmware	KEYWORD2
+SetI2CAddress	KEYWORD2
+I2CAddress	KEYWORD2
+L1C1		KEYWORD2
+L2C1		KEYWORD2
+ 
+#######################################
+# Constants (LITERAL1)
+#######################################
+
